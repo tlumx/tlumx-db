@@ -25,9 +25,6 @@
 		}
 	},
 	"autoload-dev": {
-		"files": [
-			"tests/autoload.php"
-		],
 		"psr-4": {
 			"Tlumx\\Tests\\Db\\": "tests/"
 		}
