@@ -49,7 +49,7 @@ install:
   - travis_retry composer install --no-interaction --no-suggest
   - if [[ "$DEPS" == 'highest' ]]; then travis_retry composer update --prefer-dist --no-interaction --prefer-stable --no-suggest; fi
   - if [[ "$DEPS" == 'lowest' ]]; then travis_retry composer update --prefer-dist --no-interaction --prefer-lowest --prefer-stable --no-suggest; fi
-  - if [[ "$COVERAGE" == 'true' ]]; then travis_retry composer require --dev --no-interaction satooshi/php-coveralls ; fi
+ # - if [[ "$COVERAGE" == 'true' ]]; then travis_retry composer require --dev --no-interaction satooshi/php-coveralls ; fi
 
 script:
   - ./vendor/bin/phpunit
