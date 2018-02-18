@@ -42,20 +42,20 @@ class DbProfilerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(count($profiler->getProfiles()), 0);
     }
 
+
     public function testInvalidKey()
     {
         $profiler = new DbProfiler();
-
-        $this->setExpectedException(
-            'InvalidArgumentException',
-            "Profiler has no query with handle '100'."
-        );
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage("Profiler has no query with handle '100'.");
         $profiler->end(100);
+    }
 
-        $this->setExpectedException(
-            'InvalidArgumentException',
-            "Profiler has no query with handle '500'."
-        );
+    public function testInvalidKey2()
+    {
+        $profiler = new DbProfiler();
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage("Profiler has no query with handle '500'.");
         $profiler->getProfile(500);
     }
 }
