@@ -34,7 +34,10 @@
             "@phpunit",
             "@phpcs"
         ],
-        "phpunit": "php vendor/bin/phpunit",
-        "phpcs": "php vendor/bin/phpcs"
+        "phpunit": "php vendor/bin/phpunit --colors=always",
+        "test-coverage": "php vendor/bin/phpunit --colors=always --coverage-clover clover.xml",
+        "upload-coverage": "coveralls -v",
+        "phpcs": "php vendor/bin/phpcs",
+        "phpcbf": "php vendor/bin/phpcbf"
     }
 }
