@@ -10,6 +10,7 @@
 namespace Tlumx\Tests\Db;
 
 use Tlumx\Db\Db;
+use Tlumx\Db\Exception\DbException;
 
 class DbTest extends \PHPUnit_Framework_TestCase
 {
@@ -45,6 +46,13 @@ class DbTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($this->db->isConnect(), true);
     }
 
+    public function testDbConnectException()
+    {
+        $db = new Db("bugsqlite::memory:", null, null, null, true);
+        $this->expectException(DbException::class);
+        $db->connect();
+    }
+
     public function testProfiler()
     {
 
@@ -66,6 +74,18 @@ class DbTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($profile['params'], ['a' => 100, 'b' => 'foo']);
         $this->assertEquals($profile['total'], $profile['end'] - $profile['start']);
     }
+
+    public function testStartNoEnableProfiler()
+    {
+        $this->db->setEnabledProfiler(false);
+        $this->assertNull($this->db->startProfiler('sql'));
+    }
+
+    public function testEndNoEnableProfiler()
+    {
+        $this->db->setEnabledProfiler(false);
+        $this->assertNull($this->db->endProfiler('key'));
+    }    
 
     public function testGetDriverName()
     {
