@@ -97,13 +97,55 @@ class DbTest extends \PHPUnit_Framework_TestCase
         $string = 'Great';
         $actual = $this->db->quoteValue("some str: $string\n");
         $expect = "'some str: Great\n'";
-        $this->assertEquals($actual, $expect);
+        $this->assertEquals($expect, $actual);
+    }
+
+    public function testQuoteNotStringValue()
+    {
+        $actual = $this->db->quoteValue(12);
+        $this->assertEquals(12, $actual);
+    } 
+
+    public function testQuoteNotDriveSupport()
+    {        
+        $stubPDO = $this->createMock(\PDO::class);
+        $stubPDO->method('quote')
+             ->willReturn(false);
+
+        $reflectionDb = new \ReflectionClass($this->db);
+        $reflection_property = $reflectionDb->getProperty('dbh');
+        $reflection_property->setAccessible(true);
+
+        $reflection_property->setValue($this->db, $stubPDO);
+
+        $string = 'Great';
+        $actual = $this->db->quoteValue("some str: $string\n");
+        $expect = "'some str: Great\\n'";
+        $this->assertEquals($expect, $actual);
+    }    
+
+    public function quote($value)
+    {
+        return false;
     }
 
     public function testQuoteIdentifier()
     {
         $this->assertEquals($this->db->quoteIdentifier('a'), '`a`');
         $this->assertEquals($this->db->quoteIdentifier('a.b'), '`a`.`b`');
+    }
+
+    public function testDoQuoteIdentifier()
+    {
+        $this->assertEquals($this->db->quoteIdentifier('*'), '*');
+
+        // for sqlsrv, mssql, dblib
+        $db = new Db("sqlsrv::memory:", null, null, null, true);
+        $this->assertEquals($db->quoteIdentifier('a.b'), '[a].[b]');
+
+        // for default
+        $db = new Db("bugsqlite::memory:", null, null, null, true);
+        $this->assertEquals($db->quoteIdentifier('a.b'), '"a"."b"');
     }
 
     public function testTransaction()
@@ -125,6 +167,20 @@ class DbTest extends \PHPUnit_Framework_TestCase
         }
     }
 
+    public function testRollBackTransaction()
+    {
+        $this->db->beginTransaction();   
+
+        $profiler = $this->db->getProfiler();
+        $profiles = $profiler->getProfiles();
+        $this->assertEquals($profiles[1]['sql'], 'begin transaction');
+
+        $this->db->rollBack();
+
+        $profiles = $profiler->getProfiles();
+        $this->assertEquals($profiles[2]['sql'], 'rollback transaction');
+    }
+
     public function testLastInsertId()
     {
         $pdo = $this->db->getConnection();
@@ -133,6 +189,25 @@ class DbTest extends \PHPUnit_Framework_TestCase
         $result = $this->db->lastInsertId();
         $this->assertEquals($result, 3);
     }
+
+    public function testExceptiontLastInsertId()
+    {
+        $e = new DbException();
+
+        $stubPDO = $this->createMock(\PDO::class);
+        $stubPDO->method('lastInsertId')
+                ->will($this->throwException(new \PDOException));
+
+        $reflectionDb = new \ReflectionClass($this->db);
+        $reflection_property = $reflectionDb->getProperty('dbh');
+        $reflection_property->setAccessible(true);
+
+        $reflection_property->setValue($this->db, $stubPDO);
+
+
+        $this->expectException(DbException::class);
+        $result = $this->db->lastInsertId();    
+    }   
 
     public function testExecute()
     {
@@ -144,6 +219,12 @@ class DbTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($profile['sql'], 'DELETE FROM users WHERE name = :name');
         $this->assertEquals($profile['params'], [':name' => 'Name1']);
     }
+
+    public function testExceptionExecute()
+    {
+        $this->expectException("Error");
+        $count = $this->db->execute('DELETE FROM users WHERE name = :name', [':name' => 'Name1']);       
+    }    
 
     public function testFindRows()
     {
@@ -157,6 +238,12 @@ class DbTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($profile['params'], [':name' => 'Name1']);
     }
 
+    public function testExceptionFindRows()
+    {
+        $this->expectException("Error");
+        $result = $this->db->findRows('SELECT * FROM users WHERE name = :name', [':name' => 'Name1']);
+    }     
+
     public function testFindRow()
     {
         $this->makeTestTable($this->db->getConnection());
@@ -169,6 +256,12 @@ class DbTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($profile['params'], [':name' => 'Name1']);
     }
 
+    public function testExceptionFindRow()
+    {
+        $this->expectException("Error");
+        $result = $this->db->findRow('SELECT * FROM users WHERE name = :name', [':name' => 'Name1']);
+    }    
+
     public function testFindFirstColumn()
     {
         $this->makeTestTable($this->db->getConnection());
@@ -178,7 +271,15 @@ class DbTest extends \PHPUnit_Framework_TestCase
         $profile = $profiler->getProfile(1);
         $this->assertEquals($profile['sql'], 'SELECT * FROM users WHERE name = :name');
         $this->assertEquals($profile['params'], [':name' => 'Name1']);
-    }
+    }    
+
+    public function testExceptionFindFirstColumn()
+    {
+        $this->expectException("Error");
+        $result = $this->db->findFirstColumn('SELECT * FROM users WHERE name = :name', 
+            [':name' => 'Name1']
+        );
+    }     
 
     public function testFindOne()
     {
@@ -190,6 +291,12 @@ class DbTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($profile['sql'], 'SELECT * FROM users WHERE name = :name');
         $this->assertEquals($profile['params'], [':name' => 'Name1']);
     }
+
+    public function testExceptionFindOne()
+    {
+        $this->expectException("Error");
+        $result = $this->db->findOne('SELECT * FROM users WHERE name = :name', [':name' => 'Name1']);
+    }    
 
     public function testInsert()
     {
@@ -205,6 +312,14 @@ class DbTest extends \PHPUnit_Framework_TestCase
         $result = $this->db->findRows('SELECT * FROM users WHERE name = :name', [':name' => 'New Name']);
         $this->assertEquals($result, [['id' => 3,'name' => 'New Name']]);
     }
+
+    public function testErrorInsert()
+    {
+        $this->makeTestTable($this->db->getConnection());
+        $this->expectException("Error");
+        $res = $this->db->insert('fix-table', ['name' => 'New Name']);
+    }    
+
 
     public function testUpdate()
     {
@@ -228,6 +343,55 @@ class DbTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($result, [['id' => 1,'name' => 'New Name']]);
     }
 
+    public function testUpdateWhereIsString()
+    {
+        $this->makeTestTable($this->db->getConnection());
+        $res = $this->db->update('users', ['name' => 'New Name'], '`id` = 1');
+        $this->assertEquals($res, 1);
+
+        $profiler = $this->db->getProfiler();
+        $profile = $profiler->getProfile(1);
+        $this->assertEquals($profile['sql'], 'UPDATE `users` SET `name` = ? WHERE `id` = 1');
+        $this->assertEquals($profile['params'], [
+            'params' => [
+                'name' => 'New Name'
+            ],
+            'where' => '`id` = 1'
+        ]);
+
+        $result = $this->db->findRows('SELECT * FROM users WHERE name = :name', [':name' => 'New Name']);
+        $this->assertEquals($result, [['id' => 1,'name' => 'New Name']]);
+    }
+
+    public function testUpdateCondIsNull()
+    {
+        $this->makeTestTable($this->db->getConnection());
+        $res = $this->db->update('users', ['name' => 'New Name'], ['name' => null]);
+        $this->assertEquals($res, 0);
+
+        $profiler = $this->db->getProfiler();
+        $profile = $profiler->getProfile(1);
+        $this->assertEquals($profile['sql'], 'UPDATE `users` SET `name` = ? WHERE `name` IS NULL');
+        $this->assertEquals($profile['params'], [
+            'params' => [
+                'name' => 'New Name'
+            ],
+            'where' => [
+                'name' => null
+            ]
+        ]);
+
+        $result = $this->db->findRows('SELECT * FROM users WHERE name = :name', [':name' => 'New Name']);
+        $this->assertEquals($result, []);
+    }
+
+    public function testErrorUpdate()
+    {
+        $this->makeTestTable($this->db->getConnection());
+        $this->expectException("Error");
+        $res = $this->db->update('fix-table', ['name' => 'New Name'], ['id' => 1]);
+    }     
+
     public function testDelete()
     {
         $this->makeTestTable($this->db->getConnection());
@@ -240,5 +404,40 @@ class DbTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($profile['params'], ['where' => ['name' => 'Name1']]);
         $result = $this->db->findRows('SELECT * FROM users WHERE name = :name', [':name' => 'Name1']);
         $this->assertEquals($result, []);
+    }
+
+    public function testDeleteWhereIsString()
+    {
+        $this->makeTestTable($this->db->getConnection());
+        $res = $this->db->delete('users', 'name = "Name1"');
+        $this->assertEquals($res, 1);
+
+        $profiler = $this->db->getProfiler();
+        $profile = $profiler->getProfile(1);
+        $this->assertEquals($profile['sql'], 'DELETE FROM `users` WHERE name = "Name1"');
+        $this->assertEquals($profile['params'], ['where' => 'name = "Name1"']);
+        $result = $this->db->findRows('SELECT * FROM users WHERE name = :name', [':name' => 'Name1']);
+        $this->assertEquals($result, []);
+    }
+
+    public function testDeleteCondIsNull()
+    {
+        $this->makeTestTable($this->db->getConnection());
+        $res = $this->db->delete('users', ['name'=>null]);
+        $this->assertEquals($res, 0);
+
+        $profiler = $this->db->getProfiler();
+        $profile = $profiler->getProfile(1);
+        $this->assertEquals($profile['sql'], 'DELETE FROM `users` WHERE `name` IS NULL');
+        $this->assertEquals($profile['params'], ['where' => ['name' => null]]);
+        $result = $this->db->findRows('SELECT * FROM users WHERE name IS NULL', []);
+        $this->assertEquals($result, []);
+    }
+
+    public function testExceptionDelete()
+    {
+        $this->makeTestTable($this->db->getConnection());
+        $this->expectException("Error");
+        $res = $this->db->delete('fix-table', ['name' => 'Name1']);
     }
 }
