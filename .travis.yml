@@ -50,8 +50,12 @@ install:
   - if [[ "$DEPS" == 'highest' ]]; then travis_retry composer update --prefer-dist --no-interaction --prefer-stable --no-suggest; fi
   - if [[ "$DEPS" == 'lowest' ]]; then travis_retry composer update --prefer-dist --no-interaction --prefer-lowest --prefer-stable --no-suggest; fi
 
+before_script:
+  - if [[ "$TRAVIS_PHP_VERSION" == 'hhvm' ]]; then curl -sSfL -o ~/.phpenv/versions/hhvm/bin/phpunit https://phar.phpunit.de/phpunit-5.7.phar ; fi
+
 script:
-  - ./vendor/bin/phpunit
+  - if [[ "$TRAVIS_PHP_VERSION" != 'hhvm' ]]; then ./vendor/bin/phpunit ; fi
+  - if [[ "$TRAVIS_PHP_VERSION" == 'hhvm' ]]; then phpunit ; fi
   - if [[ "$PHPCS" == 'true' ]]; then ./vendor/bin/phpcs ; fi
   - if [[ "$COVERAGE" == 'true' ]]; then composer test-coverage ; fi
 
