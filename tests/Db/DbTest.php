@@ -222,7 +222,7 @@ class DbTest extends \PHPUnit_Framework_TestCase
 
     public function testExceptionExecute()
     {
-        $this->expectException("Error");
+        $this->expectException(DbException::class);
         $count = $this->db->execute('DELETE FROM users WHERE name = :name', [':name' => 'Name1']);
     }
 
@@ -240,7 +240,7 @@ class DbTest extends \PHPUnit_Framework_TestCase
 
     public function testExceptionFindRows()
     {
-        $this->expectException("Error");
+        $this->expectException(DbException::class);
         $result = $this->db->findRows('SELECT * FROM users WHERE name = :name', [':name' => 'Name1']);
     }
 
@@ -258,7 +258,7 @@ class DbTest extends \PHPUnit_Framework_TestCase
 
     public function testExceptionFindRow()
     {
-        $this->expectException("Error");
+        $this->expectException(DbException::class);
         $result = $this->db->findRow('SELECT * FROM users WHERE name = :name', [':name' => 'Name1']);
     }
 
@@ -275,7 +275,7 @@ class DbTest extends \PHPUnit_Framework_TestCase
 
     public function testExceptionFindFirstColumn()
     {
-        $this->expectException("Error");
+        $this->expectException(DbException::class);
         $result = $this->db->findFirstColumn(
             'SELECT * FROM users WHERE name = :name',
             [':name' => 'Name1']
@@ -295,7 +295,7 @@ class DbTest extends \PHPUnit_Framework_TestCase
 
     public function testExceptionFindOne()
     {
-        $this->expectException("Error");
+        $this->expectException(DbException::class);
         $result = $this->db->findOne('SELECT * FROM users WHERE name = :name', [':name' => 'Name1']);
     }
 
@@ -317,7 +317,7 @@ class DbTest extends \PHPUnit_Framework_TestCase
     public function testErrorInsert()
     {
         $this->makeTestTable($this->db->getConnection());
-        $this->expectException("Error");
+        $this->expectException(DbException::class);
         $res = $this->db->insert('fix-table', ['name' => 'New Name']);
     }
 
@@ -389,7 +389,7 @@ class DbTest extends \PHPUnit_Framework_TestCase
     public function testErrorUpdate()
     {
         $this->makeTestTable($this->db->getConnection());
-        $this->expectException("Error");
+        $this->expectException(DbException::class);
         $res = $this->db->update('fix-table', ['name' => 'New Name'], ['id' => 1]);
     }
 
@@ -438,7 +438,7 @@ class DbTest extends \PHPUnit_Framework_TestCase
     public function testExceptionDelete()
     {
         $this->makeTestTable($this->db->getConnection());
-        $this->expectException("Error");
+        $this->expectException(DbException::class);
         $res = $this->db->delete('fix-table', ['name' => 'Name1']);
     }
 }
