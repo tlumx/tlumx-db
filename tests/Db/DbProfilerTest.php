@@ -38,6 +38,13 @@ class DbProfilerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($profile['params'], ['a' => 100, 'b' => 'str']);
         $this->assertEquals($profile['total'], $profile['end'] - $profile['start']);
 
+        // no "end"
+        $key2 = $profiler->start('another query 2', ['a' => 200, 'b' => 'str2']);
+        usleep(1000);
+        $this->assertEquals($key2, 2);
+        $this->assertEquals(count($profiler->getProfiles()), 2); // not 3
+
+        // ---
         $profiler->clear();
         $this->assertEquals(count($profiler->getProfiles()), 0);
     }
