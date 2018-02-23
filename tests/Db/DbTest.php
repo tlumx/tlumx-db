@@ -85,7 +85,7 @@ class DbTest extends \PHPUnit_Framework_TestCase
     {
         $this->db->setEnabledProfiler(false);
         $this->assertNull($this->db->endProfiler('key'));
-    }    
+    }
 
     public function testGetDriverName()
     {
@@ -104,10 +104,10 @@ class DbTest extends \PHPUnit_Framework_TestCase
     {
         $actual = $this->db->quoteValue(12);
         $this->assertEquals(12, $actual);
-    } 
+    }
 
     public function testQuoteNotDriveSupport()
-    {        
+    {
         $stubPDO = $this->createMock(\PDO::class);
         $stubPDO->method('quote')
              ->willReturn(false);
@@ -122,7 +122,7 @@ class DbTest extends \PHPUnit_Framework_TestCase
         $actual = $this->db->quoteValue("some str: $string\n");
         $expect = "'some str: Great\\n'";
         $this->assertEquals($expect, $actual);
-    }    
+    }
 
     public function quote($value)
     {
@@ -169,7 +169,7 @@ class DbTest extends \PHPUnit_Framework_TestCase
 
     public function testRollBackTransaction()
     {
-        $this->db->beginTransaction();   
+        $this->db->beginTransaction();
 
         $profiler = $this->db->getProfiler();
         $profiles = $profiler->getProfiles();
@@ -206,8 +206,8 @@ class DbTest extends \PHPUnit_Framework_TestCase
 
 
         $this->expectException(DbException::class);
-        $result = $this->db->lastInsertId();    
-    }   
+        $result = $this->db->lastInsertId();
+    }
 
     public function testExecute()
     {
@@ -223,8 +223,8 @@ class DbTest extends \PHPUnit_Framework_TestCase
     public function testExceptionExecute()
     {
         $this->expectException("Error");
-        $count = $this->db->execute('DELETE FROM users WHERE name = :name', [':name' => 'Name1']);       
-    }    
+        $count = $this->db->execute('DELETE FROM users WHERE name = :name', [':name' => 'Name1']);
+    }
 
     public function testFindRows()
     {
@@ -242,7 +242,7 @@ class DbTest extends \PHPUnit_Framework_TestCase
     {
         $this->expectException("Error");
         $result = $this->db->findRows('SELECT * FROM users WHERE name = :name', [':name' => 'Name1']);
-    }     
+    }
 
     public function testFindRow()
     {
@@ -260,7 +260,7 @@ class DbTest extends \PHPUnit_Framework_TestCase
     {
         $this->expectException("Error");
         $result = $this->db->findRow('SELECT * FROM users WHERE name = :name', [':name' => 'Name1']);
-    }    
+    }
 
     public function testFindFirstColumn()
     {
@@ -271,15 +271,16 @@ class DbTest extends \PHPUnit_Framework_TestCase
         $profile = $profiler->getProfile(1);
         $this->assertEquals($profile['sql'], 'SELECT * FROM users WHERE name = :name');
         $this->assertEquals($profile['params'], [':name' => 'Name1']);
-    }    
+    }
 
     public function testExceptionFindFirstColumn()
     {
         $this->expectException("Error");
-        $result = $this->db->findFirstColumn('SELECT * FROM users WHERE name = :name', 
+        $result = $this->db->findFirstColumn(
+            'SELECT * FROM users WHERE name = :name',
             [':name' => 'Name1']
         );
-    }     
+    }
 
     public function testFindOne()
     {
@@ -296,7 +297,7 @@ class DbTest extends \PHPUnit_Framework_TestCase
     {
         $this->expectException("Error");
         $result = $this->db->findOne('SELECT * FROM users WHERE name = :name', [':name' => 'Name1']);
-    }    
+    }
 
     public function testInsert()
     {
@@ -318,7 +319,7 @@ class DbTest extends \PHPUnit_Framework_TestCase
         $this->makeTestTable($this->db->getConnection());
         $this->expectException("Error");
         $res = $this->db->insert('fix-table', ['name' => 'New Name']);
-    }    
+    }
 
 
     public function testUpdate()
@@ -390,7 +391,7 @@ class DbTest extends \PHPUnit_Framework_TestCase
         $this->makeTestTable($this->db->getConnection());
         $this->expectException("Error");
         $res = $this->db->update('fix-table', ['name' => 'New Name'], ['id' => 1]);
-    }     
+    }
 
     public function testDelete()
     {
@@ -423,7 +424,7 @@ class DbTest extends \PHPUnit_Framework_TestCase
     public function testDeleteCondIsNull()
     {
         $this->makeTestTable($this->db->getConnection());
-        $res = $this->db->delete('users', ['name'=>null]);
+        $res = $this->db->delete('users', ['name' => null]);
         $this->assertEquals($res, 0);
 
         $profiler = $this->db->getProfiler();
