@@ -99,7 +99,7 @@ class Db
             $this->endProfiler($key);
         } catch (\PDOException $e) {
             $this->endProfiler($key);
-            throw new Exception\DbException($e->getMessage(), $e->getCode(), $e);
+            throw new Exception\DbException($e->getMessage(), (int) $e->getCode(), $e);
         }
     }
 
@@ -326,7 +326,7 @@ class Db
         try {
             $result = $this->getConnection()->lastInsertId($name);
         } catch (\PDOException $e) {
-            throw new Exception\DbException($e->getMessage(), $e->getCode(), $e);
+            throw new Exception\DbException($e->getMessage(), (int) $e->getCode(), $e);
         }
 
         return $result;
@@ -352,7 +352,7 @@ class Db
             return $count;
         } catch (\PDOException $e) {
             $this->endProfiler($key);
-            throw new Exception\DbException($e->getMessage(), $e->getCode(), $e);
+            throw new Exception\DbException($e->getMessage(), (int) $e->getCode(), $e);
         }
     }
 
@@ -378,7 +378,7 @@ class Db
             $this->endProfiler($key);
         } catch (\PDOException $e) {
             $this->endProfiler($key);
-            throw new Exception\DbException($e->getMessage(), $e->getCode(), $e);
+            throw new Exception\DbException($e->getMessage(), (int) $e->getCode(), $e);
         }
 
         return $result;
@@ -406,7 +406,7 @@ class Db
             $this->endProfiler($key);
         } catch (\PDOException $e) {
             $this->endProfiler($key);
-            throw new Exception\DbException($e->getMessage(), $e->getCode(), $e);
+            throw new Exception\DbException($e->getMessage(), (int) $e->getCode(), $e);
         }
 
         return $result;
@@ -433,7 +433,7 @@ class Db
             $this->endProfiler($key);
         } catch (\PDOException $e) {
             $this->endProfiler($key);
-            throw new Exception\DbException($e->getMessage(), $e->getCode(), $e);
+            throw new Exception\DbException($e->getMessage(), (int) $e->getCode(), $e);
         }
 
         return $result;
@@ -461,7 +461,7 @@ class Db
             $this->endProfiler($key);
         } catch (\PDOException $e) {
             $this->endProfiler($key);
-            throw new Exception\DbException($e->getMessage(), $e->getCode(), $e);
+            throw new Exception\DbException($e->getMessage(), (int) $e->getCode(), $e);
         }
 
         return $result;
@@ -499,7 +499,7 @@ class Db
             return $count;
         } catch (\PDOException $e) {
             $this->endProfiler($key);
-            throw new Exception\DbException($e->getMessage(), $e->getCode(), $e);
+            throw new Exception\DbException($e->getMessage(), (int) $e->getCode(), $e);
         }
     }
 
@@ -552,7 +552,7 @@ class Db
             return $count;
         } catch (\PDOException $e) {
             $this->endProfiler($key);
-            throw new Exception\DbException($e->getMessage(), $e->getCode(), $e);
+            throw new Exception\DbException($e->getMessage(), (int) $e->getCode(), $e);
         }
     }
 
@@ -597,7 +597,7 @@ class Db
             return $count;
         } catch (\PDOException $e) {
             $this->endProfiler($key);
-            throw new Exception\DbException($e->getMessage(), $e->getCode(), $e);
+            throw new Exception\DbException($e->getMessage(), (int) $e->getCode(), $e);
         }
     }
 }
