@@ -203,10 +203,8 @@ class Db
 
         if (($pos = strpos($this->dsn, ':')) !== false) {
             $this->driverName = strtolower(substr($this->dsn, 0, $pos));
-            return $this->driverName;
         }
 
-        $this->connect();
         return $this->driverName;
     }
 
