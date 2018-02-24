@@ -109,7 +109,7 @@ class DbTest extends \PHPUnit_Framework_TestCase
     public function testQuoteNotDriveSupport()
     {
         if (defined('HHVM_VERSION')) {
-            // $this->markTestIncomplete('This test has not work in HHVM.');
+            $this->markTestIncomplete('This test has not work in HHVM.');
         }
 
         $stubPDO = $this->createMock(\PDO::class);
