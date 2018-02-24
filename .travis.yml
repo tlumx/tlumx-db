@@ -12,6 +12,7 @@ php:
 
 cache:
   directories:
+    - vendor
     - $HOME/.composer/cache
 
 env:
@@ -24,7 +25,6 @@ matrix:
   fast_finish: true
   allow_failures:
     - php: hhvm
-      env: HHVM=true
     - php: nightly
   include:
     - php: 5.6
@@ -41,6 +41,8 @@ matrix:
       env: DEPS=lowest
     - php: 7.2
     - php: 7.2
+    - php: hhvm
+      env: HHVM=true
 
 before_install:
   - if [[ "$COVERAGE" != 'true' ]]; then phpenv config-rm xdebug.ini || return 0 ; fi
