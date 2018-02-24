@@ -8,7 +8,6 @@ php:
   - 7.1
   - 7.2
   - nightly
-  - hhvm
 
 cache:
   directories:
@@ -24,7 +23,6 @@ env:
 matrix:
   fast_finish: true
   allow_failures:
-    - php: hhvm
     - php: nightly
   include:
     - php: 5.6
@@ -41,8 +39,7 @@ matrix:
       env: DEPS=lowest
     - php: 7.2
     - php: 7.2
-    - php: hhvm
-      env: HHVM=true
+      env: DEPS=lowest
 
 before_install:
   - if [[ "$COVERAGE" != 'true' ]]; then phpenv config-rm xdebug.ini || return 0 ; fi
@@ -52,7 +49,6 @@ install:
   - travis_retry composer install --no-interaction --no-suggest
   - if [[ "$DEPS" == 'highest' ]]; then travis_retry composer update --prefer-dist --no-interaction --prefer-stable --no-suggest; fi
   - if [[ "$DEPS" == 'lowest' ]]; then travis_retry composer update --prefer-dist --no-interaction --prefer-lowest --prefer-stable --no-suggest; fi
-  - if [[ "$HHVM" == 'true' ]]; then travis_retry composer require "phpunit/phpunit:5.7"; fi 
 
 script:
   - ./vendor/bin/phpunit

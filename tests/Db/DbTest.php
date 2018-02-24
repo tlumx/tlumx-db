@@ -108,10 +108,6 @@ class DbTest extends \PHPUnit_Framework_TestCase
 
     public function testQuoteNotDriveSupport()
     {
-        if (defined('HHVM_VERSION')) {
-            $this->markTestIncomplete('This test has not work in HHVM.');
-        }
-
         $stubPDO = $this->createMock(\PDO::class);
         $stubPDO->method('quote')
              ->willReturn(false);
@@ -196,10 +192,6 @@ class DbTest extends \PHPUnit_Framework_TestCase
 
     public function testExceptiontLastInsertId()
     {
-        if (defined('HHVM_VERSION')) {
-            $this->markTestIncomplete('This test has not work in HHVM.');
-        }
-
         $e = new DbException();
 
         $stubPDO = $this->createMock(\PDO::class);
