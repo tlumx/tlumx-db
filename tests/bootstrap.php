@@ -11,8 +11,4 @@
 $autoloader = require dirname(__DIR__) . '/vendor/autoload.php';
 $autoloader->addPsr4('Tlumx\Tests\\', __DIR__);
 
-if (! class_exists('\PHPUnit_Framework_TestCase')) {
-    class_alias(\PHPUnit\Framework\TestCase::class, '\PHPUnit_Framework_TestCase');
-}
-
 require dirname(__FILE__) . '/functions.php';

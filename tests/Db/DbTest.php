@@ -12,7 +12,7 @@ namespace Tlumx\Tests\Db;
 use Tlumx\Db\Db;
 use Tlumx\Db\Exception\DbException;
 
-class DbTest extends \PHPUnit_Framework_TestCase
+class DbTest extends \PHPUnit\Framework\TestCase
 {
 
     protected $db;
