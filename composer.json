@@ -1,15 +1,18 @@
 {
 	"name": "tlumx/tlumx-db",
 	"type": "library",
-	"description": "Tlumx simple db component",
-	"keywords": ["db", "tlumx"],
+	"description": "Tlumx db component, lightweight PHP database access layer, wrapper for PDO, simple PHP Query Builder",
+	"keywords": [
+		"db",
+		"tlumx"
+	],
+	"homepage": "https://github.com/tlumx/tlumx-db",
 	"license": "MIT",
 	"authors": [
 		{
 			"name": "Yaroslav Kharitonchuk",
 			"email": "yarik.proger@gmail.com",
-			"homepage": "https://yarikproger.pp.ua",
-			"role": "Developer"
+			"homepage": "https://yarikproger.pp.ua"
 		}
 	],
 	"require": {
