@@ -16,7 +16,7 @@
 Use [Composer](https://getcomposer.org/) to install tlumx-db.
 
 ```bash
-$ composer require tlumx/tlumx-db:1.0.*"
+$ composer require tlumx/tlumx-db:1.0.*
 ```
 
 ## Usage
