@@ -1,5 +1,7 @@
 /vendor/
+/composer.phar
 /composer.lock
 /phpunit.xml
 /clover.xml
 /coveralls-upload.json
+/docs/html/
