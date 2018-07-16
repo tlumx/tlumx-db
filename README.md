@@ -21,11 +21,11 @@ $ composer require tlumx/tlumx-db "1.0.*"
 
 ## Usage
 
-See: https://tlumx.github.io/tlumx-db/
+See: https://docs.tlumx.com/tlumx-db/
 
 
 ## Resources
 
 - File issues at https://github.com/tlumx/tlumx-db/issues
-- Documentation is at https://tlumx.github.io/tlumx-db/
+- Documentation is at https://docs.tlumx.com/tlumx-db/
 - [License File](LICENSE.md) for more information.
