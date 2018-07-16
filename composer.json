@@ -4,9 +4,11 @@
 	"description": "Tlumx db component, lightweight PHP database access layer, wrapper for PDO, simple PHP Query Builder",
 	"keywords": [
 		"db",
+		"PDO",
+		"tf",
 		"tlumx"
 	],
-	"homepage": "https://github.com/tlumx/tlumx-db",
+	"homepage": "https://tlumx.com",
 	"license": "MIT",
 	"authors": [
 		{
@@ -15,6 +17,11 @@
 			"homepage": "https://yarikproger.pp.ua"
 		}
 	],
+	"support": {
+		"docs": "https://docs.tlumx.com/tlumx-db/",
+		"issues": "https://github.com/tlumx/tlumx-db/issues",
+		"source": "https://github.com/tlumx/tlumx-db"
+	},	
 	"require": {
 		"php": "^7.0"
 	},
