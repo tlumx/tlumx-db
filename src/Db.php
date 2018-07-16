@@ -1,6 +1,6 @@
 <?php
 /**
- * Tlumx (https://tlumx.github.io/)
+ * Tlumx (https://tlumx.com/)
  *
  * @author    Yaroslav Kharitonchuk <yarik.proger@gmail.com>
  * @link      https://github.com/tlumx/tlumx-db
